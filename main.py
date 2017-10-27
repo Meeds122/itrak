@@ -12,9 +12,10 @@ This software uses the BSD Licence. You can find a copy at the bottom of the
 source code. 
 """
 
-from classes import *
+from classes import Book, Client, Invoice, Payment
 import parsingFunctions as parsing
 
+TAX_RATE = 0.0775
 
 def main():
     #depickle instances into lists

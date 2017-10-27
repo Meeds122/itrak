@@ -13,8 +13,6 @@ This software uses the BSD Licence. You can find a copy at the bottom of the
 source code. 
 """
 
-TAX_RATE = 0.0775
-
 class Payment(object):
     def __init__(self, paymentType, paymentTotal, whoPayed, paymentDate, paymentID=None):
         self.how = paymentType
@@ -70,7 +68,7 @@ class Invoice(object):
         --I'm thinking standard day/month/year dd/mm/yyyy
     """
     def __init__(self, i_number, client=None, paid=False, total=0):
-        self.invoiceNumber = i_number
+        self.invoiceNumber = int(i_number)
         self.client = client # To be filled by client object
         self.paid = paid # boolean asking Is it paid???
         self.total = total # running total. Probably unessisary because I have a getter.
@@ -154,7 +152,7 @@ class Book(object):
         addClient(client_object)
         deleteClient(Client_object)
         getInvoice(invoice number) - gets invoice by number. returns invoice object
-        getInvoiceByName(customer name) - returns list of invoices with said name
+        getInvoicesByClient(param, string) - returns list of invoices with string in param ex. getInvoicesByClient("name", "Beth Carter")
         getInvoices(date=all) - returns all invoices in invoice db (from date onward. Default is all)
         getPaids(date=all) - returns paid invoices (from date onward. Default is all)
         getPaidsTotal(date=all) - returns total of paid invoices (from date onward. Default is all)
@@ -164,9 +162,6 @@ class Book(object):
         addClient(client_obj) - adds a client obj to the client list
         getClients() - returns a list of all clients
         findClients(param, string) - find clients by a parameter (name, phone, address, city, email) and the search string returns a list
-        =================================================================
-            lookup invoice by phone number <phone number> - tbi
-            lookup invoice by address <number street name> -tbi
     """
     def __init__(self, companyName):
         self.company = companyName
@@ -209,11 +204,30 @@ class Book(object):
             return self._parseInvoicesByDate(date)
         else:
             return self.invoices.copy()
-    def getInvoicesByName(self, name):
+    def getInvoicesByClient(self, param, string):
         ret = list()
-        for i in self.invoices:
-            if i.getClient().name.upper() == name.upper():
-                ret.append(i)
+        if param == "name":
+            for i in self.invoices:
+                if i.getClient().name.upper() == string.upper():
+                    ret.append(i)
+        elif param == "phone":
+            for i in self.invoice:
+                if str(i.getClient().phone1) == str(string) or str(i.getClient().phone2) == str(string):
+                    ret.append(i)
+        elif param == "address":
+            for i in self.invoices:
+                if i.getClient().address.upper() == string.upper():
+                    ret.append(i)
+        elif param == "city":
+            for i in self.invoices:
+                if i.getClient().city.upper() == string.upper():
+                    ret.append(i)
+        elif param == "email":
+            for i in self.invoices:
+                if i.getClient().email.upper() == string.upper():
+                    ret.append(i)
+        else:
+            raise Exception("Parameter to search must be specified!")
         return ret
     def getPaids(self, date="all"):
         if date == "all":
@@ -283,7 +297,7 @@ class Book(object):
                     ret.append(c)
         elif param == "phone":
             for c in self.clients:
-                if str(c.phone) == str(string):
+                if str(c.phone1) == str(string) or str(c.phone2) == str(string):
                     ret.append(c)
         elif param == "address":
             for c in self.clients:
@@ -334,6 +348,9 @@ def test_functions():
     print("Creating company book and adding above invoice")
     b = Book("Lockman Inc.")
     b.addInvoice(inv)
+    print("adding client to client list")
+    b.addClient(inv.client)
+    
     
     inv = Invoice(2)
     inv.setDate("23/10/2017")
@@ -358,15 +375,33 @@ def test_functions():
     
     print("Adding the above invoice to the ", b.getCompanyName(), "book")
     b.addInvoice(inv)
+    print("Adding client to client list")
+    b.addClient(inv.client)
+    
+    print("Printing objects and object search results")
     print(b.getInvoices())
     print(b.getInvoices(date="23/10/2017"))
     print(b.getInvoice(2))
     print(b.getPaidsTotal())
     print(b.getUnpaidTotal())
     print(b.getInvoice(2).getItems())
+    
+    print("Listing stored client objects")
+    print(b.getClients())
+    print("Searching for clients with the name beth carter by all params")
+    print("Name: ", b.findClients("name", "beth carter"))
+    print("Address: ", b.findClients("address", "77742 Juniper Ave."))
+    print("Phone: ", b.findClients("phone", 1234567))
+    print("Email: ", b.findClients("email", "betc@yahooper.net"))
+    
+    print("Looking up invoices by client - ABC Corp.")
+    print("By name: ", b.getInvoicesByClient("name", "ABC Corp."))
+    
+    
 
 
 if __name__ == "__main__":
+    TAX_RATE = 0.0775
     test_functions()
 
 
