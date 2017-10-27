@@ -12,50 +12,63 @@ This software uses the BSD Licence. You can find a copy at the bottom of the
 source code. 
 """
 
-from classes import *
-import parsingFunctions as parsing
+import sys
+
+def helper(cmd):
+    if cmd[0:1] == ["something"]: 
+        print("Do this")
+    else:
+        print("""
+        General Help:
+            new invoice
+            new client - tbi
+            lookup invoice by number <invoice number>
+            lookup invoice by name <name>
+            lookup invoice by phone number <phone number> - tbi
+            lookup invoice by address <number street name> -tbi
+            lookup client by name <name> - tbi
+            lookup client by phone <phone number> - tbi
+            lookup client by address <street number and street name> - tbi
+            delete <invoice number>
+            edit invoice <invoice number>
+            edit client <client name>
+            show paid invoices by date <date>
+            show total paid by date <date>
+            show paid invoices
+            show total paid
+            show unpaid invoices by date <date>
+            show total unpaid by date <date>
+            show unpaid invoices
+            show total unpaid
+            show clients
+            exit
+        """)
+
+def new(cmd):
+    if cmd == ["invoice"]:
+        inv_number = input("Invoice Number: ")
+        client_name = input("Client Name: ")
+        client_number = input("Client Phone Number: ")
+        client_addr = input("Client street address and name: ")
+        client_city = input("City: ")
+    elif cmd == "client":
+        print("To be implemented")
+    else:
+        print("Bad Input!")
 
 
-def main():
-    #depickle instances into lists
-    book_list = list()
-    
-    print("Welcome to ITrack, the terminal based invoice tracker. Type HELP at any point to get help.")
-    print("ITrack is a free project maintained in my spare time. Don't expect it to work the way it should or be supported all of the time.")
-    print("ITrack is free software licenced under the BSD Licence. This is a very permissive licence. Do what you wish with this software.")
-    if len(book_list) < 1:
-        print("\nNo books detected. Creating a new book.")
-        cname = input("Company Name? ")
-        book_list.append(Book(cname))
-    
-    print("Please select a book: ")
-    j = 0
-    for i in book_list:
-        print(j, " : ", i.getCompanyName())
-        j += 1
-    pick = input("Please enter the number of the book you wish to start editing: ")
-    current_book = book_list[int(pick)]
-    print("T! Current Book = ", current_book.getCompanyName())
-    while True:
-        cmd = input(">>>")
-        parsing.parser(cmd)
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def parser(cmd=""):
+    if cmd == "":
+        return
+    elif cmd == "exit":
+        sys.exit(0)
+    cmd_list = cmd.split(" ")
+    if cmd_list[0] == "help":
+        helper(cmd_list[1:])
+        return
+    elif cmd_list[0] == "new":
+        new(cmd_list[1:])
+        return
 
 
 

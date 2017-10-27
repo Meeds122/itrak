@@ -150,14 +150,23 @@ class Book(object):
     methods:
         addInvoice(Invoice object) - adds an Invoice object to the companie's invoice db
         deleteInvoice(invoice number) - Deletes the invoice in the db
+        addClient(client_object)
+        deleteClient(Client_object)
         getInvoice(invoice number) - gets invoice by number. returns invoice object
-        getInvoiceByName(customer name) - returns list of invoices with said name ====================================== << to be implemented
+        getInvoiceByName(customer name) - returns list of invoices with said name
         getInvoices(date=all) - returns all invoices in invoice db (from date onward. Default is all)
         getPaids(date=all) - returns paid invoices (from date onward. Default is all)
         getPaidsTotal(date=all) - returns total of paid invoices (from date onward. Default is all)
         getUnpaids(date=all) - returns unpaid invoice(from date onward. Default is all)
         getUnpaidTotal(date=all) - returns total of unpaid invoices (from date onward. Default is all)
         getCompanyName() - returns book name
+        =================================================================
+            new client - tbi
+            lookup invoice by phone number <phone number> - tbi
+            lookup invoice by address <number street name> -tbi
+            lookup client by name <name> - tbi
+            lookup client by phone <phone number> - tbi
+            lookup client by address <street number and street name> - tbi
     """
     def __init__(self, companyName):
         self.company = companyName
@@ -200,6 +209,12 @@ class Book(object):
             return self._parseInvoicesByDate(date)
         else:
             return self.invoices.copy()
+    def getInvoicesByName(self, name):
+        ret = list()
+        for i in self.invoices:
+            if i.getClient().name.upper() == name.upper():
+                ret.append(i)
+        return ret
     def getPaids(self, date="all"):
         if date == "all":
             paidInvoices = list()
@@ -285,8 +300,8 @@ def test_functions():
     print("Is it paid? ", inv.isPaid())
     print("Who paid? ", inv.getPayment().whoPaid().name)
     print("How? ", inv.getPayment().method())
+    
     print("Creating company book and adding above invoice")
-        
     b = Book("Lockman Inc.")
     b.addInvoice(inv)
     
