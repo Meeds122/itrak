@@ -46,12 +46,8 @@ def helper(cmd):
 
 def new(cmd):
     if cmd == ["invoice"]:
-        inv_number = input("Invoice Number: ")
-        client_name = input("Client Name: ")
-        client_number = input("Client Phone Number: ")
-        client_addr = input("Client street address and name: ")
-        client_city = input("City: ")
-    elif cmd == "client":
+        print("To be implemented")
+    elif cmd == ["client"]:
         print("To be implemented")
     else:
         print("Bad Input!")

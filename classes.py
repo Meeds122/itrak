@@ -37,6 +37,7 @@ class Payment(object):
 class Client(object):
     def __init__(self, clientName):
         self.name = clientName
+        self.invoices = list()
         self.address = None
         self.city = None
         self.contact = None
@@ -66,7 +67,7 @@ class Invoice(object):
         getItems() - returns a list of current items
         setDate() - sets the invoice date
         getDate() - returns invoice date
-        --I have yet to decide how to represent dates. I'm thinking standard day/month/year dd/mm/yyyy
+        --I'm thinking standard day/month/year dd/mm/yyyy
     """
     def __init__(self, i_number, client=None, paid=False, total=0):
         self.invoiceNumber = i_number
@@ -160,13 +161,12 @@ class Book(object):
         getUnpaids(date=all) - returns unpaid invoice(from date onward. Default is all)
         getUnpaidTotal(date=all) - returns total of unpaid invoices (from date onward. Default is all)
         getCompanyName() - returns book name
+        addClient(client_obj) - adds a client obj to the client list
+        getClients() - returns a list of all clients
+        findClients(param, string) - find clients by a parameter (name, phone, address, city, email) and the search string returns a list
         =================================================================
-            new client - tbi
             lookup invoice by phone number <phone number> - tbi
             lookup invoice by address <number street name> -tbi
-            lookup client by name <name> - tbi
-            lookup client by phone <phone number> - tbi
-            lookup client by address <street number and street name> - tbi
     """
     def __init__(self, companyName):
         self.company = companyName
@@ -271,6 +271,36 @@ class Book(object):
             return total
     def getCompanyName(self):
         return self.company
+    def addClient(self, client):
+        self.clients.append(client)
+    def getClients(self):
+        return self.clients.copy()
+    def findClients(self, param, string):
+        ret = list()
+        if param == "name":
+            for c in self.clients:
+                if c.name.upper() == string.upper():
+                    ret.append(c)
+        elif param == "phone":
+            for c in self.clients:
+                if str(c.phone) == str(string):
+                    ret.append(c)
+        elif param == "address":
+            for c in self.clients:
+                if c.address.upper() == string.upper():
+                    ret.append(c)
+        elif param == "city":
+            for c in self.clients:
+                if c.city.upper() == string.upper():
+                    ret.append(c)
+        elif param == "email":
+            for c in self.clients:
+                if c.email.upper() == string.upper():
+                    ret.append(c)
+        else:
+            raise Exception("Parameter to search must be specified!")
+        return ret
+    
 
 def test_functions():
     inv = Invoice(1)

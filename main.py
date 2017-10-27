@@ -37,7 +37,7 @@ def main():
     current_book = book_list[int(pick)]
     print("T! Current Book = ", current_book.getCompanyName())
     while True:
-        cmd = input(">>>")
+        cmd = input(">>> ")
         parsing.parser(cmd)
 
 if __name__ == "__main__":
